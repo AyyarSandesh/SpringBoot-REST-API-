@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.restapi.dto.UserDto;
 import com.restapi.entities.User;
 import com.restapi.services.UserService;
 
@@ -28,31 +29,31 @@ public class UserController {
 	
 	//http://loclhost:8080/api/users
 	@PostMapping
-	public ResponseEntity<User> createUser(@RequestBody User user){
-		User savedUser=userServ.createUser(user);
+	public ResponseEntity<UserDto> createUser(@RequestBody UserDto user){
+		UserDto savedUser=userServ.createUser(user);
 		return new ResponseEntity<>(savedUser,HttpStatus.CREATED);
 	}
 	
 	//http://localhost:8080/api/users/1
 	@GetMapping("{id}")
-	public ResponseEntity<User> getUserById(@PathVariable Long id){
-		User user=userServ.getUserById(id);
+	public ResponseEntity<UserDto> getUserById(@PathVariable Long id){
+		UserDto user=userServ.getUserById(id);
 		return new ResponseEntity<>(user,HttpStatus.OK);
 	}
 	
 	
 	//http://localhost:8080/api/users
 	@GetMapping
-	public ResponseEntity<List<User>> getAllUsers(){
-		List<User> users=userServ.getAllUsers();
+	public ResponseEntity<List<UserDto>> getAllUsers(){
+		List<UserDto> users=userServ.getAllUsers();
 		return new ResponseEntity<>(users,HttpStatus.OK);
 	}
 	
 	//http://localhost:8080/api/users/1
 	@PutMapping("{id}")
-	public ResponseEntity<User> updateUser(@PathVariable Long id,@RequestBody User user){
-		user.setId(id);
-		User updateUser=userServ.updateUser(user);
+	public ResponseEntity<UserDto> updateUser(@PathVariable Long id,@RequestBody UserDto userDto){
+		userDto.setId(id);
+		UserDto updateUser=userServ.updateUser(userDto);
 		return new ResponseEntity<>(updateUser,HttpStatus.OK);
 	}
 	
