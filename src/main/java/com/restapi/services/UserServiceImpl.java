@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +20,8 @@ import lombok.AllArgsConstructor;
 public class UserServiceImpl implements UserService {
 	@Autowired
 	private UserRepository userRepo;
+	@Autowired
+	private ModelMapper modelMapper;
 	@Override
 	public UserDto createUser(UserDto userDto) {
 		//convert UserDto into user Jpa Entity
@@ -28,7 +31,8 @@ public class UserServiceImpl implements UserService {
 //					userDto.getLastName(),
 //					userDto.getEmail()
 //				);
-		User user=UserMapper.mapToUser(userDto);
+//		User user=UserMapper.mapToUser(userDto);
+		User user=modelMapper.map(userDto, User.class);
 		
 		User savedUser=userRepo.save(user);
 		//convert user Jpa  entity to UserDto
@@ -38,7 +42,8 @@ public class UserServiceImpl implements UserService {
 //					savedUser.getLastName(),
 //					savedUser.getEmail()
 //				);
-		UserDto savedUserDto=UserMapper.mapToUserDto(savedUser);
+//		UserDto savedUserDto=UserMapper.mapToUserDto(savedUser);
+		UserDto savedUserDto=modelMapper.map(savedUser, UserDto.class);
 		
 		return savedUserDto;
 	}
@@ -46,12 +51,14 @@ public class UserServiceImpl implements UserService {
 	public UserDto getUserById(Long id) {
 		Optional<User> optionalusr=userRepo.findById(id);
 		User user=optionalusr.get();
-		return UserMapper.mapToUserDto(user);
+//		return UserMapper.mapToUserDto(user);
+		return modelMapper.map(user, UserDto.class);
 	}
 	@Override
 	public List<UserDto> getAllUsers() {
 		List<User> Users=userRepo.findAll();
-		return Users.stream().map(UserMapper::mapToUserDto).collect(Collectors.toList());
+//		return Users.stream().map(UserMapper::mapToUserDto).collect(Collectors.toList());
+		return Users.stream().map((user) -> modelMapper.map(user,UserDto.class)).collect(Collectors.toList());
 	}
 	@Override
 	public UserDto updateUser(UserDto userDto) {
@@ -60,7 +67,8 @@ public class UserServiceImpl implements UserService {
 		existingUser.setLastName(userDto.getLastName());
 		existingUser.setEmail(userDto.getEmail());
 		User updatedUser=userRepo.save(existingUser);
-		return UserMapper.mapToUserDto(updatedUser);
+//		return UserMapper.mapToUserDto(updatedUser);
+		return modelMapper.map(updatedUser, UserDto.class);
 	}
 	@Override
 	public void deleteUser(Long id) {
