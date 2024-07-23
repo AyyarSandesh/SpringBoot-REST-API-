@@ -1,9 +1,20 @@
 package com.restapi.dto;
 
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotEmpty;
+
 public class UserDto {
 	private Long id;
+	//User first Name should not be null or empty.
+	@NotEmpty(message="User first Name should not be null or empty")
 	private String firstName;
+	//User Last Name should not be null or empty.
+	@NotEmpty(message="User Last Name should not be null or empty")
 	private String lastName;
+	//User email should not be null or empty
+	@NotEmpty(message="User email should not be null or empty")
+	//Email address should be valid
+	@Email(message="Email address should be valid")
 	private String email;
 	public UserDto() {
 		super();

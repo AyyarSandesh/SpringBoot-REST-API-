@@ -18,7 +18,9 @@ import com.restapi.dto.UserDto;
 import com.restapi.entities.User;
 import com.restapi.services.UserService;
 
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import lombok.val;
 
 @RestController
 @AllArgsConstructor
@@ -29,7 +31,7 @@ public class UserController {
 	
 	//http://loclhost:8080/api/users
 	@PostMapping
-	public ResponseEntity<UserDto> createUser(@RequestBody UserDto user){
+	public ResponseEntity<UserDto> createUser(@Valid @RequestBody UserDto user){
 		UserDto savedUser=userServ.createUser(user);
 		return new ResponseEntity<>(savedUser,HttpStatus.CREATED);
 	}
@@ -51,7 +53,7 @@ public class UserController {
 	
 	//http://localhost:8080/api/users/1
 	@PutMapping("{id}")
-	public ResponseEntity<UserDto> updateUser(@PathVariable Long id,@RequestBody UserDto userDto){
+	public ResponseEntity<UserDto> updateUser(@PathVariable Long id,@RequestBody @Valid UserDto userDto){
 		userDto.setId(id);
 		UserDto updateUser=userServ.updateUser(userDto);
 		return new ResponseEntity<>(updateUser,HttpStatus.OK);

@@ -26,12 +26,6 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public UserDto createUser(UserDto userDto) {
 		//convert UserDto into user Jpa Entity
-//		User user=new User(
-//					userDto.getId(),
-//					userDto.getFirstName(),
-//					userDto.getLastName(),
-//					userDto.getEmail()
-//				);
 //		User user=UserMapper.mapToUser(userDto);
 		Optional<User> optionalUser=userRepo.findByEmail(userDto.getEmail());
 		if(optionalUser.isPresent()) {
@@ -41,12 +35,6 @@ public class UserServiceImpl implements UserService {
 		
 		User savedUser=userRepo.save(user);
 		//convert user Jpa  entity to UserDto
-//		UserDto savedUserDto=new UserDto(
-//					savedUser.getId(),
-//					savedUser.getFirstName(),
-//					savedUser.getLastName(),
-//					savedUser.getEmail()
-//				);
 //		UserDto savedUserDto=UserMapper.mapToUserDto(savedUser);
 		UserDto savedUserDto=modelMapper.map(savedUser, UserDto.class);
 		
