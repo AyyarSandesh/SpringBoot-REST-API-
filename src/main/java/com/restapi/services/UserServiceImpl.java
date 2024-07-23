@@ -10,7 +10,8 @@ import org.springframework.stereotype.Service;
 
 import com.restapi.dto.UserDto;
 import com.restapi.entities.User;
-import com.restapi.mapper.UserMapper;
+import com.restapi.exception.EmailAlreadyExistsException;
+import com.restapi.exception.ResourceNotFoundException;
 import com.restapi.repositories.UserRepository;
 
 import lombok.AllArgsConstructor;
@@ -32,6 +33,10 @@ public class UserServiceImpl implements UserService {
 //					userDto.getEmail()
 //				);
 //		User user=UserMapper.mapToUser(userDto);
+		Optional<User> optionalUser=userRepo.findByEmail(userDto.getEmail());
+		if(optionalUser.isPresent()) {
+			throw new EmailAlreadyExistsException("Email Already Exists for user");
+		}
 		User user=modelMapper.map(userDto, User.class);
 		
 		User savedUser=userRepo.save(user);
@@ -49,8 +54,11 @@ public class UserServiceImpl implements UserService {
 	}
 	@Override
 	public UserDto getUserById(Long id) {
-		Optional<User> optionalusr=userRepo.findById(id);
-		User user=optionalusr.get();
+//		Optional<User> optionalusr=userRepo.findById(id);
+//		User user=optionalusr.get();
+		User user=userRepo.findById(id).orElseThrow(
+				()-> new ResourceNotFoundException("User", "id", id)
+				);
 //		return UserMapper.mapToUserDto(user);
 		return modelMapper.map(user, UserDto.class);
 	}
@@ -62,7 +70,10 @@ public class UserServiceImpl implements UserService {
 	}
 	@Override
 	public UserDto updateUser(UserDto userDto) {
-		User existingUser=userRepo.findById(userDto.getId()).get();
+//		User existingUser=userRepo.findById(userDto.getId()).get();
+		User existingUser=userRepo.findById(userDto.getId()).orElseThrow(
+					()-> new ResourceNotFoundException("User", "Id", userDto.getId())
+				);
 		existingUser.setFirstName(userDto.getFirstName());
 		existingUser.setLastName(userDto.getLastName());
 		existingUser.setEmail(userDto.getEmail());
@@ -72,6 +83,9 @@ public class UserServiceImpl implements UserService {
 	}
 	@Override
 	public void deleteUser(Long id) {
+		User existingUser=userRepo.findById(id).orElseThrow(
+					()-> new ResourceNotFoundException("User", "id", id)
+				);
 		userRepo.deleteById(id);
 	}
 }
